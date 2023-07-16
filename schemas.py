@@ -8,12 +8,13 @@ class ConverterInput(BaseModel):
     to_currencies: List[str]
 
     @validator("to_currencies")
-    def validate_to_currencies(cls,value):
-        
+    def validate_to_currencies(cls, value):
+        for currency in value:
+            if not re.match("^[A-Z]{3}$", currency):
+                raise ValueError(f"Invalid currency {currency}")
+        return value
 
-"""
-{
-    "price": 1234,
-    "to_currencies": ["USD","GBP"]
-}
-"""
+
+class ConverterOutput(BaseModel):
+    message: str
+    data: List[dict]
